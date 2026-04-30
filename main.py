@@ -84,34 +84,49 @@ def obtener_solicitudes():
         cursor = conn.cursor(dictionary=True)
 
         query = """
-            SELECT 
-                PK_PEDIDO AS numero_solicitud,
-                FK_PERSONA_SOLICITUD AS persona_solicitud,
-                FK_TIPO_PUBLICO AS tipo_publico,
-                FK_EFA_PEDIDO AS ruc_efa,
-                FK_ADMINISTRADO_PEDIDO AS ruc_administrado,
-                TX_REGISTRO_SIGED AS registro_siged,
-                TX_NRO_DOC AS numero_documento,
-                FE_FEC_SOLICITUD AS fecha_solicitud,
-                TX_AREAOD AS area_ode,
-                TX_TEMA_PEDIDO AS tema_pedido,
-                TX_ACCIONES AS acciones,
-                TX_OBSERVACIONES AS observaciones,
-                FK_SUBTEMA_SOLICITUD AS subtema,
-                TX_ESTADO AS estado_pedido,
-                TX_ESTADO AS usuario,
-                FE_FE_REGISTRO AS fecha_registro
-            FROM T_MVP_SOLICITUD_AFA
-            ORDER BY PK_PEDIDO DESC
-            LIMIT 500
-        """
+        SELECT 
+            s.PK_PEDIDO AS numero_solicitud,
+            s.FK_PERSONA_SOLICITUD AS persona_solicitud,
+            s.FK_TIPO_PUBLICO AS tipo_publico,
+            s.FK_EFA_PEDIDO AS ruc_efa,
+            s.FK_ADMINISTRADO_PEDIDO AS ruc_administrado,
+            s.TX_REGISTRO_SIGED AS registro_siged,
+            s.TX_NRO_DOC AS numero_documento,
+            s.FE_FEC_SOLICITUD AS fecha_solicitud,
+            s.TX_AREAOD AS area_ode,
+            s.TX_TEMA_PEDIDO AS tema_pedido,
+            s.TX_ACCIONES AS acciones,
+            s.TX_OBSERVACIONES AS observaciones,
 
-        print("QUERY SOLICITUDES:", query)
+            tg.TX_DESCRIPCION AS tema_general,
+            te.TX_DESCRIPCION AS tema_especifico,
+            st.TX_DESCRIPCION AS subtema,
+
+            s.FK_SUBTEMA_SOLICITUD AS subtema_id,
+
+            s.TX_ESTADO AS estado_pedido,
+            s.TX_ESTADO AS usuario,
+            s.FE_FE_REGISTRO AS fecha_registro
+
+        FROM T_MVP_SOLICITUD_AFA s
+
+        LEFT JOIN T_MAP_SUBTEMA st 
+            ON st.PK_SUBTEMA = s.FK_SUBTEMA_SOLICITUD
+
+        LEFT JOIN T_MAP_TEMA_ESPECIFICO te 
+            ON te.PK_TEMA_ESPECIFICO = st.FK_ESPECIFICO_SUBTEMA
+
+        LEFT JOIN T_MAP_TEMA_GENERAL tg 
+            ON tg.PK_TEMA_GENERAL = te.FK_GENERAL_ESPECIFICO
+
+        ORDER BY s.PK_PEDIDO DESC
+        LIMIT 500
+        """
 
         cursor.execute(query)
         data = cursor.fetchall()
 
-        # 🔥 Formateo de fechas (igual que GAS)
+        # 🔥 formatear fechas
         for row in data:
             if row["fecha_solicitud"]:
                 row["fecha_solicitud"] = str(row["fecha_solicitud"])[:10]
@@ -120,8 +135,6 @@ def obtener_solicitudes():
 
         cursor.close()
         conn.close()
-
-        print("RESULT SOLICITUDES:", len(data))
 
         return data
 
