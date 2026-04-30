@@ -7,10 +7,11 @@ app = FastAPI()
 def get_conn():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST"),
+        port=int(os.getenv("DB_PORT")),   
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASS"),
         database=os.getenv("DB_NAME")
-    )
+    )    
 
 TABLAS_PERMITIDAS = ["T_MAP_TIPO_DOCUMENTO"]
 
