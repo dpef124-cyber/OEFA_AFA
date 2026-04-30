@@ -17,11 +17,13 @@ app.add_middleware(
 def get_conn():
     return mysql.connector.connect(
         host=os.getenv("DB_HOST"),
-        port=int(os.getenv("DB_PORT")),   
+        port=int(os.getenv("DB_PORT")),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASS"),
-        database=os.getenv("DB_NAME")
-    )    
+        database=os.getenv("DB_NAME"),
+        ssl_verify_cert=False,
+        ssl_verify_identity=False
+    ) 
 
 TABLAS_PERMITIDAS = [
     "T_MAP_TIPO_DOCUMENTO",
