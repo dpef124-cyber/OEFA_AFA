@@ -1,8 +1,18 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware  # 👈 AGREGADO
 import mysql.connector
 import os
 
 app = FastAPI()
+
+# 🔥 CORS (AGREGADO)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 👈 permite llamadas desde Apps Script
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def get_conn():
     return mysql.connector.connect(
