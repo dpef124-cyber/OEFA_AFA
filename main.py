@@ -117,7 +117,7 @@ def obtener_solicitudes():
             ON te.PK_TEMA_ESPECIFICO = st.FK_ESPECIFICO_SUBTEMA
 
         LEFT JOIN T_MAP_TEMA_GENERAL tg 
-            ON tg.PK_TEMA_GENERAL = te.FK_GENERAL_ESPECIFICO
+            ON tg.PK_TIPO_TEMA = te.FK_GENERAL_ESPECIFICO
 
         ORDER BY s.PK_PEDIDO DESC
         LIMIT 500
