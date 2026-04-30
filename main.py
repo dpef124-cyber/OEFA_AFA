@@ -13,7 +13,15 @@ def get_conn():
         database=os.getenv("DB_NAME")
     )    
 
-TABLAS_PERMITIDAS = ["T_MAP_TIPO_DOCUMENTO"]
+TABLAS_PERMITIDAS = [
+    "T_MAP_TIPO_DOCUMENTO",
+    "T_MAP_REGION",
+    "T_MAP_SEXO",
+    "T_MAP_TEMA_GENERAL",
+    "T_MAP_SUB_SECTOR",
+    "T_MAP_TIPO_PUBLICO",
+    "T_MAP_AREA"
+]
 
 @app.get("/lista")
 def obtener_lista(tabla: str, campo: str, campo_dv: str, campo_lbl: str):
